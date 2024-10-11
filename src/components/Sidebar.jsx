@@ -23,7 +23,7 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => (
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
-          borderRadius: '5px',
+          borderRadius: '3em',
         }}
         key={category.name}
         aria-pressed={category.name === selectedCategory}
