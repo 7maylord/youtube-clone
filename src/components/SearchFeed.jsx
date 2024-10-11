@@ -1,29 +1,46 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import { Typography, Box } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { fetchFromAPI } from "../utils/fetchFromAPI";
+import { useParams } from "react-router-dom"; 
+import { fetchFromAPI } from "../utils/fetchFromAPI"; 
 import { Videos } from "./";
 
 const SearchFeed = () => {
+  // State to hold the videos fetched from the API
   const [videos, setVideos] = useState(null);
+  
+  // Extract the search term from URL parameters
   const { searchTerm } = useParams();
 
+  // Effect to fetch videos whenever the search term changes
   useEffect(() => {
-    fetchFromAPI(`search?part=snippet&q=${searchTerm}`)
-      .then((data) => setVideos(data.items))
-  }, [searchTerm]);
+    // Function to fetch videos asynchronously
+    const fetchVideos = async () => {
+      // Fetch videos based on the search term
+      const data = await fetchFromAPI(`search?part=snippet&q=${searchTerm}`);
+      // Update the state with the fetched videos
+      setVideos(data.items);
+    };
+    
+    fetchVideos(); // Call the fetch function
+  }, [searchTerm]); // Dependency array to re-run the effect when searchTerm changes
 
   return (
-    <Box p={2} minHeight="95vh">
-      <Typography variant="h4" fontWeight={900}  color="white" mb={3} ml={{ sm: "100px"}}>
+    <Box p={2} minHeight="95vh"> {/* Box for layout with padding and minimum height */}
+      <Typography 
+        variant="h4" 
+        fontWeight={900}  
+        color="white" 
+        mb={3} 
+        ml={{ xs: 0, sm: "100px" }} 
+      >
         Search Results for <span style={{ color: "#FC1503" }}>{searchTerm}</span> videos
       </Typography>
-      <Box display="flex">
-        <Box sx={{ mr: { sm: '100px' } }}/>
-        {<Videos videos={videos} />}
+      <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} justifyContent="center">
+        <Box sx={{ mr: { sm: '100px' } }} /> {/* Spacer for responsive layout */}
+        {videos && <Videos videos={videos} />} {/* Render Videos component only if videos are available */}
       </Box>
     </Box>
   );
 };
 
-export default SearchFeed;
+export default SearchFeed; // Export the component for use in other parts of the application
