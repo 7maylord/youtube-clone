@@ -7,6 +7,7 @@ import { Videos } from "./";
 const SearchFeed = () => {
   // State to hold the videos fetched from the API
   const [videos, setVideos] = useState(null);
+  const [error, setError] = useState(null);
   
   // Extract the search term from URL parameters
   const { searchTerm } = useParams();
@@ -15,14 +16,21 @@ const SearchFeed = () => {
   useEffect(() => {
     // Function to fetch videos asynchronously
     const fetchVideos = async () => {
-      // Fetch videos based on the search term
-      const data = await fetchFromAPI(`search?part=snippet&q=${searchTerm}`);
-      // Update the state with the fetched videos
-      setVideos(data.items);
+      try {
+        // Fetch videos based on the search term
+        const data = await fetchFromAPI(`search?part=snippet&q=${searchTerm}`);
+        // Update the state with the fetched videos
+        setVideos(data.items);
+      } catch (error) {
+        // Set the error message if the fetch fails
+        setError('Failed to fetch videos. Please try again later.');
+        console.error('Fetch error:', error); // Log the error for debugging
+      }
     };
     
     fetchVideos(); // Call the fetch function
   }, [searchTerm]); // Dependency array to re-run the effect when searchTerm changes
+
 
   return (
     <Box p={2} minHeight="95vh"> {/* Box for layout with padding and minimum height */}
